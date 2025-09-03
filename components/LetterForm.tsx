@@ -5,7 +5,7 @@ import { tones } from '../types';
 
 const InputField: React.FC<{ label: string; value: string; onChange: (e: React.ChangeEvent<HTMLInputElement>) => void; placeholder: string; }> = ({ label, value, onChange, placeholder }) => (
   <div>
-    <label className="block text-sm font-medium text-gray-300 mb-1">{label}</label>
+    <label className="block text-sm font-bold text-gray-300 mb-1">{label}</label>
     <input
       type="text"
       value={value}
@@ -18,14 +18,14 @@ const InputField: React.FC<{ label: string; value: string; onChange: (e: React.C
 
 const ToneSelector: React.FC<{ selectedTone: Tone; onToneChange: (tone: Tone) => void; }> = ({ selectedTone, onToneChange }) => (
   <div>
-    <label className="block text-sm font-medium text-gray-300 mb-2">Tone</label>
+    <label className="block text-sm font-bold text-gray-300 mb-2">Tone</label>
     <div className="flex flex-wrap gap-2">
       {tones.map((tone) => (
         <button
           key={tone}
           type="button"
           onClick={() => onToneChange(tone)}
-          className={`px-4 py-2 text-sm font-medium rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-black focus:ring-white
+          className={`px-4 py-2 text-sm font-bold rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-black focus:ring-white
             ${selectedTone === tone
               ? 'bg-white text-black'
               : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
@@ -73,7 +73,7 @@ const LetterForm: React.FC<LetterFormProps> = ({
         />
       </div>
       <div className="mb-6">
-        <label className="block text-sm font-medium text-gray-300 mb-1">The Grievance</label>
+        <label className="block text-sm font-bold text-gray-300 mb-1">The Grievance</label>
         <textarea
           value={complaint}
           onChange={handleComplaintChange}
@@ -88,7 +88,7 @@ const LetterForm: React.FC<LetterFormProps> = ({
       <button
         onClick={onGenerate}
         disabled={isLoading}
-        className="w-full inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-black bg-white hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-black focus:ring-white disabled:bg-gray-500 disabled:cursor-not-allowed transition-colors"
+        className="w-full inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-bold rounded-md shadow-sm text-black bg-white hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-black focus:ring-white disabled:bg-gray-500 disabled:cursor-not-allowed transition-colors"
       >
         {isLoading ? (
           <>

@@ -36,7 +36,7 @@ const App: React.FC = () => {
   }, [recipient, signature, complaint, tone]);
 
   return (
-    <div className="min-h-screen bg-black text-white font-sans flex flex-col">
+    <div className="min-h-screen bg-black text-white font-sans flex flex-col font-bold">
       <main className="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="max-w-3xl mx-auto">
           <Header />
