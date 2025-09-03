@@ -1,0 +1,5 @@
+{
+  "name": "Artistic Open Letter Generator",
+  "description": "Generate ironic, humorous letters complaining about trivial art-world problems, inspired by a real open letter to objkt.com. Users can specify the recipient and sign-off name.",
+  "requestFramePermissions": []
+}
