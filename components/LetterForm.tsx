@@ -1,7 +1,7 @@
 
 import React from 'react';
-import type { LetterFormProps, Tone } from '../types';
-import { tones } from '../types';
+import type { LetterFormProps, Tone, LetterLength } from '../types';
+import { tones, letterLengths } from '../types';
 
 const InputField: React.FC<{ label: string; value: string; onChange: (e: React.ChangeEvent<HTMLInputElement>) => void; placeholder: string; }> = ({ label, value, onChange, placeholder }) => (
   <div>
@@ -39,6 +39,39 @@ const ToneSelector: React.FC<{ selectedTone: Tone; onToneChange: (tone: Tone) =>
   </div>
 );
 
+const LengthSlider: React.FC<{
+  selectedLength: LetterLength;
+  onLengthChange: (length: LetterLength) => void;
+}> = ({ selectedLength, onLengthChange }) => {
+  const currentIndex = letterLengths.indexOf(selectedLength);
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newIndex = parseInt(event.target.value, 10);
+    onLengthChange(letterLengths[newIndex]);
+  };
+
+  return (
+    <div>
+      <label htmlFor="length-slider" className="block text-sm font-bold text-gray-300 mb-2">Letter Length</label>
+      <input
+        id="length-slider"
+        type="range"
+        min="0"
+        max={letterLengths.length - 1}
+        value={currentIndex}
+        onChange={handleChange}
+        className="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-white"
+        aria-label="Letter length slider"
+      />
+      <div className="flex justify-between text-xs text-gray-400 mt-1 px-1">
+        {letterLengths.map((length) => (
+          <span key={length}>{length}</span>
+        ))}
+      </div>
+    </div>
+  );
+};
+
 
 const LetterForm: React.FC<LetterFormProps> = ({
   recipient,
@@ -49,6 +82,8 @@ const LetterForm: React.FC<LetterFormProps> = ({
   setComplaint,
   tone,
   setTone,
+  letterLength,
+  setLetterLength,
   onGenerate,
   isLoading,
 }) => {
@@ -84,6 +119,9 @@ const LetterForm: React.FC<LetterFormProps> = ({
       </div>
       <div className="mb-6">
         <ToneSelector selectedTone={tone} onToneChange={setTone} />
+      </div>
+      <div className="mb-8">
+        <LengthSlider selectedLength={letterLength} onLengthChange={setLetterLength} />
       </div>
       <button
         onClick={onGenerate}

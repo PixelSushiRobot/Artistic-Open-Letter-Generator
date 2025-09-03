@@ -1,6 +1,6 @@
 
 import { GoogleGenAI } from "@google/genai";
-import type { Tone } from '../types';
+import type { Tone, LetterLength } from '../types';
 
 if (!process.env.API_KEY) {
     throw new Error("API_KEY environment variable not set");
@@ -29,7 +29,13 @@ This letter aims to open a shared path, but it also makes it clear that this pat
 `;
 
 
-export const generateLetter = async (recipient: string, signature: string, complaint: string, tone: Tone): Promise<string> => {
+export const generateLetter = async (recipient: string, signature: string, complaint: string, tone: Tone, letterLength: LetterLength): Promise<string> => {
+  const lengthInstruction = {
+    'Short': 'The letter should be concise, around 2-3 short paragraphs.',
+    'Medium': 'The letter should be of a moderate length, around 4-5 paragraphs, similar to the example provided.',
+    'Long': 'The letter should be quite verbose and lengthy, with at least 6-7 paragraphs, really dragging out the complaint.'
+  }[letterLength];
+  
   const prompt = `
 You are an AI assistant specializing in satirical writing. Your task is to write a hilariously formal and serious open letter about a trivial "problem."
 
@@ -53,12 +59,22 @@ You must adopt the following persona: "${tone}".
 - If "Passive-Aggressive": Employ backhanded compliments and thinly veiled insults. For example, "While we appreciate the *effort*..." or "It's impossible to ignore the... unique choices made."
 - If "World-Weary & Cynical": Write from a perspective of profound exhaustion, as if this is the latest in an endless series of disappointments. The tone is one of resignation, but with a final, desperate plea for sanity.
 
+**Letter Length:**
+${lengthInstruction}
+
 **Rules for Generating the Satire:**
-1.  **Address and Signature:** The letter MUST start with "Open Letter to ${recipient}" on the first line and end with "With respect and with hope,\\n${signature}". Do not add any extra formatting.
-2.  **Mimic, Don't Copy:** Follow the structure: opening dialogue, stating the problem's importance, acknowledging the platform's work (perhaps passive-aggressively, depending on tone), explaining how the community is affected, and proposing absurdly formal solutions.
-3.  **Intelligent Language, Not Jargon:** Avoid over-the-top, nonsensical art-speak. Use intelligent, formal language that a real artist might use, but apply it to the silly complaint. The humor is in the misapplication of seriousness.
-4.  **Proposals:** The list of proposed solutions should be comically overblown and bureaucratic in relation to the actual complaint.
-5.  **No Real-World Targets:** Do not mention objkt.com or any real entities besides the user-provided recipient.
+1.  **Address and Signature:** The letter MUST start with "Open Letter to ${recipient}" on the first line. It must end with a closing salutation followed by the signature on a new line, like this:
+    [Closing Salutation],
+    ${signature}
+2.  **Tone-Appropriate Closing:** The closing salutation MUST match the selected tone.
+    - For "Serious & Formal": Use a dignified closing like "With respect and with hope," or "Sincerely,".
+    - For "Slightly Unhinged": Use a dramatic, overwrought closing like "With a mixture of terror and anticipation," or "Yours, in a state of creative crisis,".
+    - For "Passive-Aggressive": Use a closing with a subtle bite, such as "Awaiting a... satisfactory response," or "With all due consideration,".
+    - For "World-Weary & Cynical": Use a closing that conveys exhaustion, like "Yours, in perpetual disappointment," or "With what little energy we have left,".
+3.  **Mimic, Don't Copy:** Follow the structure: opening dialogue, stating the problem's importance, acknowledging the platform's work (perhaps passive-aggressively, depending on tone), explaining how the community is affected, and proposing absurdly formal solutions.
+4.  **Intelligent Language, Not Jargon:** Avoid over-the-top, nonsensical art-speak. Use intelligent, formal language that a real artist might use, but apply it to the silly complaint. The humor is in the misapplication of seriousness.
+5.  **Proposals:** The list of proposed solutions should be comically overblown and bureaucratic in relation to the actual complaint.
+6.  **No Real-World Targets:** Do not mention objkt.com or any real entities besides the user-provided recipient.
 
 Now, generate the letter.
 `;
