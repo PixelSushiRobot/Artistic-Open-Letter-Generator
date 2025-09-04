@@ -74,7 +74,7 @@ Generate an open letter with the following specifications:
   try {
     const response = await ai.models.generateContent({
         model: 'gemini-2.5-flash',
-        contents: { parts: [{ text: userPrompt }] },
+        contents: [{ text: userPrompt }],
         config: {
             systemInstruction: systemInstruction,
         }
