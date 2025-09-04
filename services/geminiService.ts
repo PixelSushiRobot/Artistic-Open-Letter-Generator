@@ -31,58 +31,54 @@ This letter aims to open a shared path, but it also makes it clear that this pat
 
 export const generateLetter = async (recipient: string, signature: string, complaint: string, tone: Tone, letterLength: LetterLength): Promise<string> => {
   const lengthInstruction = {
-    'Short': 'The letter should be concise, around 2-3 short paragraphs.',
-    'Medium': 'The letter should be of a moderate length, around 4-5 paragraphs, similar to the example provided.',
-    'Long': 'The letter should be quite verbose and lengthy, with at least 6-7 paragraphs, really dragging out the complaint.'
+    'Pithy': 'The letter should be extremely brief, just one or two powerful sentences.',
+    'Short': 'The letter should be a single, concise paragraph.',
+    'Medium': 'The letter should be of a moderate length, around 2-3 paragraphs.',
+    'Long': 'The letter should be quite verbose, around 4-5 paragraphs, similar to the example provided.',
+    'Verbose': 'The letter should be incredibly lengthy and rambling, with at least 6-7 paragraphs, really dragging out the complaint.'
   }[letterLength];
   
-  const prompt = `
-You are an AI assistant specializing in satirical writing. Your task is to write a hilariously formal and serious open letter about a trivial "problem."
+  const systemInstruction = `
+You are an AI assistant specializing in satirical writing. Your primary task is to write a hilariously formal and serious open letter about a trivial "problem" provided by the user.
 
-**Context & Style Guide:**
-Here is a real, serious open letter written by artists to an online art marketplace. Use this as your primary guide for the structure, vocabulary, and deadpan serious tone. The humor will come from applying this level of gravity to a silly complaint.
+**Style Guide:**
+Your main inspiration is the following real, serious open letter written by artists to an online art marketplace. You must mimic its structure, vocabulary, and deadpan serious tone. The humor comes from applying this level of gravity to a silly complaint.
 
 ---
 ${originalLetter}
 ---
 
-**Your Task:**
-Write a satirical open letter that mimics the style of the example above. The core of the satire is the immense gap between the serious tone and the triviality of the user's complaint.
+**General Rules:**
+1.  **Structure:** Follow the example's structure: opening dialogue, stating the problem's importance, acknowledging the recipient's work (can be passive-aggressive depending on tone), explaining community impact, and proposing absurdly formal solutions (for longer letters).
+2.  **Language:** Use intelligent, formal language. Avoid nonsensical art-speak. The humor is in the misapplication of seriousness.
+3.  **Proposals:** Make any proposed solutions comically overblown and bureaucratic.
+4.  **No Real-World Targets:** Do not mention "objkt.com" or any real entities besides what the user provides.
+5.  **Formatting:** The letter must begin with "Open Letter to [Recipient]" and end with a closing salutation followed by the signature on a new line.
+`;
 
-**The Trivial Complaint to Dramatize:**
-"${complaint}"
+  const userPrompt = `
+Generate an open letter with the following specifications:
 
-**The Required Tone:**
-You must adopt the following persona: "${tone}".
-- If "Serious & Formal": Stick very closely to the original letter's dignified, community-focused style. The humor should be extremely dry.
-- If "Slightly Unhinged": The language should become more emotionally charged and frantic, while still trying to maintain a formal structure. Use more dramatic punctuation and rhetorical questions.
-- If "Passive-Aggressive": Employ backhanded compliments and thinly veiled insults. For example, "While we appreciate the *effort*..." or "It's impossible to ignore the... unique choices made."
-- If "World-Weary & Cynical": Write from a perspective of profound exhaustion, as if this is the latest in an endless series of disappointments. The tone is one of resignation, but with a final, desperate plea for sanity.
+- **Recipient:** ${recipient}
+- **Signature:** ${signature}
+- **The Trivial Complaint:** "${complaint}"
+- **Tone to adopt:** "${tone}"
+- **Length:** ${letterLength} (${lengthInstruction})
 
-**Letter Length:**
-${lengthInstruction}
-
-**Rules for Generating the Satire:**
-1.  **Address and Signature:** The letter MUST start with "Open Letter to ${recipient}" on the first line. It must end with a closing salutation followed by the signature on a new line, like this:
-    [Closing Salutation],
-    ${signature}
-2.  **Tone-Appropriate Closing:** The closing salutation MUST match the selected tone.
-    - For "Serious & Formal": Use a dignified closing like "With respect and with hope," or "Sincerely,".
-    - For "Slightly Unhinged": Use a dramatic, overwrought closing like "With a mixture of terror and anticipation," or "Yours, in a state of creative crisis,".
-    - For "Passive-Aggressive": Use a closing with a subtle bite, such as "Awaiting a... satisfactory response," or "With all due consideration,".
-    - For "World-Weary & Cynical": Use a closing that conveys exhaustion, like "Yours, in perpetual disappointment," or "With what little energy we have left,".
-3.  **Mimic, Don't Copy:** Follow the structure: opening dialogue, stating the problem's importance, acknowledging the platform's work (perhaps passive-aggressively, depending on tone), explaining how the community is affected, and proposing absurdly formal solutions.
-4.  **Intelligent Language, Not Jargon:** Avoid over-the-top, nonsensical art-speak. Use intelligent, formal language that a real artist might use, but apply it to the silly complaint. The humor is in the misapplication of seriousness.
-5.  **Proposals:** The list of proposed solutions should be comically overblown and bureaucratic in relation to the actual complaint.
-6.  **No Real-World Targets:** Do not mention objkt.com or any real entities besides the user-provided recipient.
-
-Now, generate the letter.
+**Tone-Specific Instructions & Closing Salutations:**
+- **Serious & Formal:** Extremely dry humor. Stick closely to the style guide's dignified tone. Use a closing like "With respect and with hope," or "Sincerely,".
+- **Slightly Unhinged:** Emotionally charged, frantic language within a formal structure. Use dramatic punctuation. Use a closing like "With a mixture of terror and anticipation," or "Yours, in a state of creative crisis,".
+- **Passive-Aggressive:** Backhanded compliments and thinly veiled insults. Use a closing with a subtle bite, like "Awaiting a... satisfactory response," or "With all due consideration,".
+- **World-Weary & Cynical:** Tone of profound exhaustion and resignation. Use a closing like "Yours, in perpetual disappointment," or "With what little energy we have left,".
 `;
 
   try {
     const response = await ai.models.generateContent({
         model: 'gemini-2.5-flash',
-        contents: prompt
+        contents: userPrompt,
+        config: {
+            systemInstruction: systemInstruction,
+        }
     });
     return response.text.trim();
   } catch (error) {

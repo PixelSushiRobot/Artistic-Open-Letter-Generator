@@ -2,8 +2,8 @@
 export type Tone = 'Serious & Formal' | 'Slightly Unhinged' | 'Passive-Aggressive' | 'World-Weary & Cynical';
 export const tones: Tone[] = ['Serious & Formal', 'Slightly Unhinged', 'Passive-Aggressive', 'World-Weary & Cynical'];
 
-export type LetterLength = 'Short' | 'Medium' | 'Long';
-export const letterLengths: LetterLength[] = ['Short', 'Medium', 'Long'];
+export type LetterLength = 'Pithy' | 'Short' | 'Medium' | 'Long' | 'Verbose';
+export const letterLengths: LetterLength[] = ['Pithy', 'Short', 'Medium', 'Long', 'Verbose'];
 
 export interface LetterFormProps {
   recipient: string;
