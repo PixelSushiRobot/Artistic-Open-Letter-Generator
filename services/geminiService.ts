@@ -1,4 +1,3 @@
-
 import { GoogleGenAI } from "@google/genai";
 import type { Tone, LetterLength } from '../types';
 
@@ -75,7 +74,7 @@ Generate an open letter with the following specifications:
   try {
     const response = await ai.models.generateContent({
         model: 'gemini-2.5-flash',
-        contents: userPrompt,
+        contents: { parts: [{ text: userPrompt }] },
         config: {
             systemInstruction: systemInstruction,
         }
