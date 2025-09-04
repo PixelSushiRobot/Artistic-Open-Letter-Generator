@@ -74,13 +74,17 @@ Based on all the instructions, generate the open letter.
 - **World-Weary & Cynical:** Tone of profound exhaustion and resignation. Use a closing like "Yours, in perpetual disappointment," or "With what little energy we have left,".
 `;
 
+  const combinedPrompt = `${systemInstruction}\n\n${userPrompt}`;
+
   try {
     const response = await ai.models.generateContent({
         model: 'gemini-2.5-flash',
-        contents: { parts: [{ text: userPrompt }] },
-        config: {
-          systemInstruction: systemInstruction,
-        },
+        // This structure is robust and mirrors the underlying REST API request format,
+        // which should prevent the SDK from making browser-specific errors.
+        contents: [{
+            role: "user",
+            parts: [{ text: combinedPrompt }]
+        }]
     });
     return response.text.trim();
   } catch (error) {
