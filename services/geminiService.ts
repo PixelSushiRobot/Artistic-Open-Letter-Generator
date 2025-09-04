@@ -79,10 +79,10 @@ Based on all the instructions, generate the open letter.
   try {
     const response = await ai.models.generateContent({
         model: 'gemini-2.5-flash',
-        // This structure is the most robust format. By wrapping the content
-        // object in an array, we ensure the SDK creates a standard JSON
-        // payload, which works reliably across all browsers.
+        // This structure is the most robust and unambiguous format.
+        // It prevents SDK inconsistencies that cause errors in Safari and Firefox.
         contents: [{
+            role: "user",
             parts: [{ text: combinedPrompt }]
         }]
     });
