@@ -64,6 +64,9 @@ Generate an open letter with the following specifications:
 - **Tone to adopt:** "${tone}"
 - **Length:** ${letterLength} (${lengthInstruction})
 
+**TASK:**
+Based on all the instructions, generate the open letter.
+
 **Tone-Specific Instructions & Closing Salutations:**
 - **Serious & Formal:** Extremely dry humor. Stick closely to the style guide's dignified tone. Use a closing like "With respect and with hope," or "Sincerely,".
 - **Slightly Unhinged:** Emotionally charged, frantic language within a formal structure. Use dramatic punctuation. Use a closing like "With a mixture of terror and anticipation," or "Yours, in a state of creative crisis,".
@@ -71,12 +74,13 @@ Generate an open letter with the following specifications:
 - **World-Weary & Cynical:** Tone of profound exhaustion and resignation. Use a closing like "Yours, in perpetual disappointment," or "With what little energy we have left,".
 `;
 
-  const fullPrompt = `${systemInstruction}\n\n---\n\n**TASK:**\n\n${userPrompt}`;
-
   try {
     const response = await ai.models.generateContent({
         model: 'gemini-2.5-flash',
-        contents: fullPrompt,
+        contents: { parts: [{ text: userPrompt }] },
+        config: {
+          systemInstruction: systemInstruction,
+        },
     });
     return response.text.trim();
   } catch (error) {
