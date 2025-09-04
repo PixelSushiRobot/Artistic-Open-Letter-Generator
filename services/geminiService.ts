@@ -79,13 +79,12 @@ Based on all the instructions, generate the open letter.
   try {
     const response = await ai.models.generateContent({
         model: 'gemini-2.5-flash',
-        // This structure is the correct, robust format for a single-turn request.
-        // It provides the prompt as a structured object, which avoids the
-        // ReadableStream error in Safari, while also being a valid format
-        // that prevents the 400 error seen in Firefox.
-        contents: {
+        // This structure is the most robust format. By wrapping the content
+        // object in an array, we ensure the SDK creates a standard JSON
+        // payload, which works reliably across all browsers.
+        contents: [{
             parts: [{ text: combinedPrompt }]
-        }
+        }]
     });
     return response.text.trim();
   } catch (error) {
