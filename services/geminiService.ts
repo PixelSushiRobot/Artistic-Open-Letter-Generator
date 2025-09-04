@@ -71,18 +71,19 @@ Generate an open letter with the following specifications:
 - **World-Weary & Cynical:** Tone of profound exhaustion and resignation. Use a closing like "Yours, in perpetual disappointment," or "With what little energy we have left,".
 `;
 
+  const fullPrompt = `${systemInstruction}\n\n---\n\n**TASK:**\n\n${userPrompt}`;
+
   try {
     const response = await ai.models.generateContent({
         model: 'gemini-2.5-flash',
-        contents: [{ text: userPrompt }],
-        config: {
-            systemInstruction: systemInstruction,
-        }
+        contents: fullPrompt,
     });
     return response.text.trim();
   } catch (error) {
     console.error("Error generating letter:", error);
     if (error instanceof Error) {
+        // The error object from the SDK might have more details. Let's log the whole thing.
+        console.error("Full error object:", JSON.stringify(error, null, 2));
         throw new Error(`Failed to generate letter from AI: ${error.message}`);
     }
     throw new Error("An unknown error occurred while communicating with the AI.");
